@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
+/*   By: lmeubrin <lmeubrin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/13 09:57:40 by lmeubrin         ###   ########.fr       */
+/*   Created: 2024/09/14 16:37:12 by lmeubrin          #+#    #+#             */
+/*   Updated: 2024/09/14 17:09:49 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "project.h"
+#ifndef PIPEX_H
+# define PIPEX_H
+# include "../libft/libft_full.h"
+# include <stdlib.h>
+# include <unistd.h>
 
-int	main(int argc, char *argv[])
-{
-	ft_printf("Number of arguments: %d\n", argc);
-	for (int i = 0; i < argc; i++)
-	{
-		ft_printf("Argument %d: %s\n", i, argv[i]);
-	}
-	return (EXIT_SUCCESS);
-}
+#endif //PIPEX_H
