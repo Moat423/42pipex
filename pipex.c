@@ -6,12 +6,12 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/16 19:55:16 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/17 19:56:22 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/pipex.h"
-#include <stdlib>
+#include <stdlib.h>
 
 // todo
 //do something for first letter of filename == | as per man open
@@ -33,6 +33,10 @@ int	main(int argc, char *argv[])
 	outfile = open(argv[argc - 1], O_TRUNC, O_CLOEXEC, O_CREAT, 00666);
 	//if infile invalid (error) then proceed with the second command
 	command = handle_command(infile, argv);
+	if (outfile)
+		close(outfile);
+	if (infile)
+		close(infile);
 	return (EXIT_SUCCESS);
 }
 
