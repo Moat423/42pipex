@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/17 20:42:16 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/18 10:29:34 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 
 char	**get_paths(char *envp[]);
 char	*get_commpath(char *envp[], const char *command);
-char	*check_commpath(char *path, char *slashcomm);
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -61,8 +60,10 @@ char	*get_commpath(char *envp[], const char *command)
 	i = 0;
 	while (paths[i++])
 	{
-		commpath = check_commpath(paths[i], saved_command);
-		if (commpath)
+		commpath = ft_strjoin(paths[i], saved_command);
+		if (!commpath)
+			break ;
+		else if (access(commpath, X_OK) == 0)
 		{
 			i = 0;
 			while (paths[i])
@@ -72,30 +73,11 @@ char	*get_commpath(char *envp[], const char *command)
 		}
 		free(commpath);
 	}
-	ft_fprintf(2, "pipex: no such file or directory: ");
-	ft_fprintf(2, "%s%s\n", paths[0], saved_command);
 	i = 0;
 	while (paths[i])
 		free(paths[i++]);
 	free(saved_command);
 	return (NULL);
-}
-
-char	*check_commpath(char *path, char *slashcomm)
-{
-	char	*commpath;
-
-	commpath = ft_strjoin(path, slashcomm);
-	if (!commpath)
-		return (NULL);
-	else if (access(commpath, X_OK) == 0)
-	{
-		free(slashcomm);
-		return (commpath);
-	}
-	free(commpath);
-	return (NULL);
-
 }
 
 char	**get_paths(char *envp[])
