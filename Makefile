@@ -6,7 +6,7 @@
 #    By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 15:55:27 by lmeubrin          #+#    #+#              #
-#    Updated: 2024/09/14 16:41:57 by lmeubrin         ###   ########.fr        #
+#    Updated: 2024/09/18 16:45:25 by lmeubrin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ INCLUDES := -L$(LIBFT_DIR)
 
 OBJ_DIR := obj
 
-SRCS := pipex.c
+SRCS := pipex.c path.c utils.c
 
 OBJS := $(SRCS:%.c=$(OBJ_DIR)/%.o)
 

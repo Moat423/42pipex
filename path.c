@@ -6,12 +6,14 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/18 10:39:24 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:30:35 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include "include/pipex.h"
 #include "libft/lib_ft/libft.h"
@@ -20,33 +22,76 @@
 char	**get_paths(char *envp[]);
 char	*get_commpath(char *envp[], const char *command);
 char	*check_commpath(char *path, char *backslcomm);
+int	execute(int argc, char *argv[], char *envp[]);
+int	do_exec(char *commpath, char *command[]);
 
-int	main(int argc, char *argv[], char *envp[])
+/* int	main(int argc, char *argv[], char *envp[]) */
+/* { */
+/* 	return (execute(argc, argv, envp)); */
+/* } */
+
+int	execute(int argc, char *argv[], char *envp[])
 {
 	int		i;
 	char	**command;
 	char	*commpath;
 	pid_t	cpid;
-	int		pipefd[2];
+	int		status;
+	/* int		pipefd[2]; */
 
 	i = 0;
 	if (argc == 1)
 		return (0);
 	command = ft_split(argv[2], ' ');
 	commpath = get_commpath(envp, command[0]);
+	/* if (pipe(pipefd) == -1) */
+	/* 	perror("pipe"); */
+	cpid = fork();
+	if (cpid == 0)
+	{
+		ft_fprintf(1, "child about to execute\n");
+		ft_printf("commpath: %s\n", commpath);
+		ft_printf_char_array(command, 2);
+		execve(commpath, command, envp);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
+	else if (cpid == -1)
+		perror("fork");
+	else
+	{
+		waitpid(cpid, &status, 0);
+	}
+	if (commpath)
+		free(commpath);
+	while (command[i])
+		free(command[i++]);
+	return (0);
+}
+
+int	do_exec(char *commpath, char *command[])
+{
+	int		pipefd[2];
+	pid_t	cpid;
+
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
+		return (EXIT_FAILURE);
 	}
 	cpid = fork();
 	if (cpid == 0)
 	{
 		execve(commpath, command, NULL);
 		perror("execve");
+		return (EXIT_FAILURE);
 	}
 	else if (cpid == -1)
+	{
 		perror("fork");
-	return (0);
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }
 
 char	*get_commpath(char *envp[], const char *command)
