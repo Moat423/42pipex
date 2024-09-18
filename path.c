@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/18 10:29:34 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/18 10:39:24 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 char	**get_paths(char *envp[]);
 char	*get_commpath(char *envp[], const char *command);
+char	*check_commpath(char *path, char *backslcomm);
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -60,23 +61,29 @@ char	*get_commpath(char *envp[], const char *command)
 	i = 0;
 	while (paths[i++])
 	{
-		commpath = ft_strjoin(paths[i], saved_command);
-		if (!commpath)
+		commpath = check_commpath(paths[i], saved_command);
+		if (commpath)
 			break ;
-		else if (access(commpath, X_OK) == 0)
-		{
-			i = 0;
-			while (paths[i])
-				free(paths[i++]);
-			free(saved_command);
-			return (commpath);
-		}
-		free(commpath);
 	}
 	i = 0;
 	while (paths[i])
 		free(paths[i++]);
 	free(saved_command);
+	return (commpath);
+}
+
+char	*check_commpath(char *path, char *backslcomm)
+{
+	char	*commpath;
+
+	commpath = ft_strjoin(path, backslcomm);
+	if (!commpath)
+		return (NULL);
+	else if (access(commpath, X_OK) == 0)
+	{
+		return (commpath);
+	}
+	free(commpath);
 	return (NULL);
 }
 
