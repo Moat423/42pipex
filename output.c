@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 10:06:21 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/19 10:13:31 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/19 13:03:25 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,30 @@ int	outfile(int argc, char *argv[], char *envp[])
 	//if infile invalid (error) then proceed with the second command
 	return (EXIT_SUCCESS);
 }
+
+//saved
+int	readfromfiletopipe(char *argv[], char *envp[])
+{
+	char	**command;
+	char	*commpath;
+	char	**paths;
+	/* int		pipefd[2]; */
+
+	paths = get_paths(envp);
+	command = ft_split(argv[2], ' ');
+	commpath = get_commpath(paths, command[0]);
+	if (!commpath || !commpath)
+	{
+		if (commpath)
+			free(commpath);
+		return (free_char_array(command, EXIT_FAILURE));
+	}
+	ft_foxecute(command, commpath);
+	free(commpath);
+	free_char_array(command, 1);
+	return (EXIT_SUCCESS);
+}
+
 
 int	ft_foxecute(char **command, char *commpath)
 {
