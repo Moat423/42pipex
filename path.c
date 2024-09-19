@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/18 16:30:35 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/19 10:10:22 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "libft/libft_full.h"
 
 char	**get_paths(char *envp[]);
-char	*get_commpath(char *envp[], const char *command);
+char	*get_commpath(char **paths, const char *command);
 char	*check_commpath(char *path, char *backslcomm);
 int	execute(int argc, char *argv[], char *envp[]);
 int	do_exec(char *commpath, char *command[]);
@@ -94,14 +94,12 @@ int	do_exec(char *commpath, char *command[])
 	return (EXIT_SUCCESS);
 }
 
-char	*get_commpath(char *envp[], const char *command)
+char	*get_commpath(char **paths, const char *command)
 {
-	char	**paths;
 	int		i;
 	char	*commpath;
 	char	*saved_command;
 
-	paths = get_paths(envp);
 	saved_command = ft_strjoin("/", command);
 	i = 0;
 	while (paths[i++])

@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/18 17:13:44 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/19 10:46:12 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@
 
 int	get_fd(char *filename);
 int	handle_command(int infile, int argc, char *commands[]);
+int	ft_foxecute(char **command, char *commpath);
 int	invoke_command(int *pipes, char *command);
 int	pipex(int argc, char *argv[], char *envp[]);
 int	readfromfiletopipe(char *argv[], char *envp[]);
+int	basic_read_stdin_to_print(void);
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	int	infile;
-	char	line[10];
 
 	(void)envp;
 	errno = 0;
@@ -35,69 +36,56 @@ int	main(int argc, char *argv[], char *envp[])
 	infile = get_fd(argv[1]);
 	if (infile == -1)
 		return (EXIT_FAILURE);
-	dup2(infile, STDIN_FILENO);
-	read(STDIN_FILENO, line, 10);
-	ft_printf("read 10 bytes:%s,\n", line);
-	/* return (pipex(argc, argv, envp)); */
-	readfromfiletopipe(argv, envp);
-	close(infile);
-	return (EXIT_SUCCESS);
-}
-
-int	pipex(int argc, char *argv[], char *envp[])
-{
-	int		infile;
-	int		outfile;
-	char	**command;
-	char	*commpath;
-	int		comnb;
-	int		i;
-
-	infile = get_fd(argv[1]);
-	outfile = open(argv[argc - 1], O_TRUNC, O_CLOEXEC, O_CREAT, 00666);
-	i = 0;
-	//if infile invalid (error) then proceed with the second command
-	comnb = 2;
-	command = ft_split(argv[comnb], ' ');
-	commpath = get_commpath(envp, command[0]);
-	if (commpath)
-		free(commpath);
-	while (command[i])
-		free(command[i++]);
-	close(outfile);
-	if (infile)
-		close(infile);
-	return (EXIT_SUCCESS);
-}
-
-//this one is working, all the other one have mistakes like missing ++!!!!!!!!
-int	readfromfiletopipe(char *argv[], char *envp[])
-{
-	int		infile;
-	char	**command;
-	char	*commpath;
-	int		i;
-	pid_t	cpid;
-	int		status;
-
-	infile = get_fd(argv[1]);
-	if (infile == -1)
-		return (EXIT_FAILURE);
-	i = 0;
-	command = ft_split(argv[2], ' ');
-	commpath = get_commpath(envp, command[0]);
-	if (!commpath || !commpath)
-	{
-		close(infile);
-		//clean command or commpath
-		return (EXIT_FAILURE);
-	}
 	if (dup2(infile, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		return (EXIT_FAILURE);
 	}
 	close(infile);
+	/* basic_read_stdin_to_print(); */
+	readfromfiletopipe(argv, envp);
+	return (EXIT_SUCCESS);
+}
+
+int	basic_read_stdin_to_print(void)
+{
+	char	line[11];
+	int		readbytes;
+
+	ft_bzero(line, 11);
+	readbytes = read(STDIN_FILENO, line, 10);
+	ft_printf("read 10 bytes:%s,\n", line);
+	return (readbytes);
+}
+
+//this one is working, all the other one have mistakes like missing ++!!!!!!!!
+int	readfromfiletopipe(char *argv[], char *envp[])
+{
+	char	**command;
+	char	*commpath;
+	char	**paths;
+	/* int		pipefd[2]; */
+
+	paths = get_paths(envp);
+	command = ft_split(argv[2], ' ');
+	commpath = get_commpath(paths, command[0]);
+	if (!commpath || !commpath)
+	{
+		if (commpath)
+			free(commpath);
+		return (free_char_array(command, EXIT_FAILURE));
+	}
+	ft_foxecute(command, commpath);
+	free(commpath);
+	free_char_array(command, 1);
+	return (EXIT_SUCCESS);
+}
+
+int	ft_foxecute(char **command, char *commpath)
+{
+	pid_t	cpid;
+	int		status;
+
 	cpid = fork();
 	if (cpid == 0)
 	{
@@ -112,8 +100,6 @@ int	readfromfiletopipe(char *argv[], char *envp[])
 	}
 	else
 		waitpid(cpid, &status, 0);
-	free(commpath);
-	free_char_array(command, 1);
 	return (EXIT_SUCCESS);
 }
 
