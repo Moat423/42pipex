@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/21 17:26:09 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/21 19:08:54 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 #include "include/pipex.h"
 #include "libft/lib_ft/libft.h"
 #include "libft/libft_full.h"
-
-char	**get_paths(char *envp[]);
-char	*get_commpath(char **paths, const char *command);
 
 char	*get_commpath(char **paths, const char *command)
 {
@@ -77,12 +74,9 @@ int	make_exec(char *arg, char *envp[])
 		return (rperror("malloc"));
 	}
 	commpath = get_commpath(paths, command[0]);
-	if (!commpath)
-	{
-		free(commpath);
-		return (1);
-	}
 	free_char_array(paths, 1);
+	if (!commpath)
+		return (free_char_array(command, 1));
 	execve(commpath, command, envp);
 	free(commpath);
 	free_char_array(command, 1);
