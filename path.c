@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/19 15:55:06 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/21 17:26:09 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,20 @@ char	*get_commpath(char **paths, const char *command)
 	char	*commpath;
 
 	i = 0;
-	while (paths[i++])
+	while (paths[i])
 	{
-		commpath = check_commpath(paths[i], command);
-		if (commpath)
+		commpath = ft_strjoin3(paths[i++], "/", command);
+		if (!commpath)
+			return (NULL);
+		else if (access(commpath, X_OK) == 0)
 			break ;
+		free(commpath);
+		commpath = NULL;
 	}
 	if (!commpath)
 		ft_fprintf(2, "pipex: command not found: %s", command);
 	i = 0;
 	return (commpath);
-}
-
-char	*check_commpath(char *path, const char *command)
-{
-	char	*commpath;
-
-	commpath = ft_strjoin3(path, "/", command);
-	if (!commpath)
-		return (NULL);
-	else if (access(commpath, X_OK) == 0)
-		return (commpath);
-	free(commpath);
-	return (NULL);
 }
 
 char	**get_paths(char *envp[])
@@ -69,4 +60,31 @@ char	**get_paths(char *envp[])
 		i++;
 	}
 	return (NULL);
+}
+
+int	make_exec(char *arg, char *envp[])
+{
+	char	**paths;
+	char	*commpath;
+	char	**command;
+
+	paths = get_paths(envp);
+	command = ft_split(arg, ' ');
+	if (!command || !paths)
+	{
+		free_char_array(command, 1);
+		free_char_array(paths, 1);
+		return (rperror("malloc"));
+	}
+	commpath = get_commpath(paths, command[0]);
+	if (!commpath)
+	{
+		free(commpath);
+		return (1);
+	}
+	free_char_array(paths, 1);
+	execve(commpath, command, envp);
+	free(commpath);
+	free_char_array(command, 1);
+	return (1);
 }

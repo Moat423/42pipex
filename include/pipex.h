@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:37:12 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/19 15:54:23 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/21 17:25:40 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_strjoin3(char const *s1, char const *s2, char const *s3);
 int	execute(int argc, char *argv[], char *envp[]);
 char	*get_commpath(char *envp[], const char *command);
 char	**get_paths(char *envp[]);
-int	make_exec(const char **command, char *commpath, int	fds[]);
 char	*check_commpath(char *path, const char *command);
+int	make_exec(char *arg, char *envp[]);
 
 #endif //PIPEX_H

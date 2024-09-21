@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:51:34 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/19 14:41:17 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/21 17:14:08 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	free_char_array(char **array, int ret)
 	int	i;
 
 	i = 0;
+	if (!array)
+		return (ret);
 	while (array[i])
 		free(array[i++]);
 	free(array);
