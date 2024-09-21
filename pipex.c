@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/19 15:55:53 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/21 15:40:29 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,31 @@ int	basic_read_stdin_to_print(void);
 //files[0] = read end (in) files[1] = write end (out)
 int	main(int argc, char *argv[], char *envp[])
 {
-	int	files[2];
+	int		infile;
+	int		outfile;
+	int		files[2];
 
-	(void)envp;
 	errno = 0;
 	if (basic_argc_checking(argc))
 		return (EXIT_FAILURE);
-	files[0] = get_fd(argv[1]);
-	if (files[0] == -1)
-		return (EXIT_FAILURE);
-	files[1] = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (!files[1])
+	infile = open(argv[1], O_RDONLY, 0444);
+	/* if (infile != -1) */
+	/* { */
+	/* 	if (dup2(infile, STDIN_FILENO) == -1) */
+	/* 		return (rperror("dup2")); */
+	/* } */
+	/* if (infile != -1) */
+	/* 	close(infile); */
+	outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (outfile == -1)
 		return (rperror("open"));
+	/* if (dup2(outfile, STDOUT_FILENO) == -1) */
+	/* 	return (rperror("dup2")); */
+	/* close(outfile); */
+	files[0] = infile;
+	files[1] = outfile;
 	readfromfiletopipe(argc, argv, envp, files);
 	return (EXIT_SUCCESS);
-}
-
-int	basic_read_stdin_to_print(void)
-{
-	char	line[11];
-	int		readbytes;
-
-	ft_bzero(line, 11);
-	readbytes = read(STDIN_FILENO, line, 10);
-	ft_printf("read 10 bytes:%s,\n", line);
-	return (readbytes);
 }
 
 int	readfromfiletopipe(int argc, char *argv[], char *envp[], int *files)
@@ -151,16 +151,4 @@ int	basic_argc_checking(int argc)
 	if (argc == 1 || argc > 5)
 		return (1);
 	return (0);
-}
-
-int	get_fd(char *filename)
-{
-	int	fd;
-
-	if (!filename)
-		return (-1);
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-		perror("open");
-	return (fd);
 }
