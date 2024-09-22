@@ -6,7 +6,7 @@
 #    By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 15:55:27 by lmeubrin          #+#    #+#              #
-#    Updated: 2024/09/20 10:56:41 by lmeubrin         ###   ########.fr        #
+#    Updated: 2024/09/22 18:59:32 by lmeubrin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ MAKEFLAGS += --warn-undefined-variables
 CC := cc
 CFLAGS := -Werror -Wall -Wextra -g
 NAME := pipex
+NAME_BONUS := pipex_bonus
 SANITIZE_NAME := $(NAME)_sanitize
 LIBFT_DIR := libft
 LIBFT_A := $(LIBFT_DIR)/libft.a
@@ -26,10 +27,12 @@ INCLUDES := -L$(LIBFT_DIR)
 OBJ_DIR := obj
 
 SRCS := pipex.c path.c utils.c
+SRCS_BONUS := pipex_bonus.c utils.c path.c
 
 HEADERS := include/pipex.h
 
 OBJS := $(SRCS:%.c=$(OBJ_DIR)/%.o)
+OBJS_BONUS := $(SRCS_BONUS:%.c=$(OBJ_DIR)/%.o)
 
 .PHONY: all, clean, fclean, re, submodules
 
@@ -44,6 +47,11 @@ $(OBJ_DIR):
 
 $(NAME): $(OBJS) $(LIBFT_A)
 	@echo "Linking executable $(NAME)..."
+	$(CC) $(CFLAGS) $(OBJS) $(INCLUDES) $(LIBFT) -o $@
+	@echo "done"
+
+$(NAME_BONUS): $(OBJS) $(LIBFT_A)
+	@echo "Linking executable $(NAME_BONUS)..."
 	$(CC) $(CFLAGS) $(OBJS) $(INCLUDES) $(LIBFT) -o $@
 	@echo "done"
 
