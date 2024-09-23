@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 12:00:02 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:39:15 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ int	main(int argc, char *argv[], char *envp[])
 	outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (outfile == -1)
 		return (rperror("open"));
-	exec_to_outf(argv[argc - 2], envp, outfile);
+	if (dup2(outfile, STDOUT_FILENO) == -1)
+		return (rperror("dup2"));
+	close(outfile);
+	exec_to_stdout(argv[argc - 2], envp);
 	while (wait(NULL) > 0)
 		;
 	return (EXIT_SUCCESS);

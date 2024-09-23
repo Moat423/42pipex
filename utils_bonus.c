@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:14:14 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 11:28:07 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 17:17:13 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	*get_line(int fd)
 
 	i = 0;
 	str = ft_calloc(1, 520);
+	if (!str)
+		return (0);
 	while ((str[i] == '\n' || str[i] == '\0'))
 	{
 		read_ret = read(fd, &str[i], 1);
@@ -49,11 +51,12 @@ int	here_doc(char *delim)
 		{
 			ft_bzero(delim_start, ft_strlen(delim_start));
 			ft_fprintf(1, "%s\n", line);
-			close (0);
 			break ;
 		}
+		ft_fprintf(1, "%s\n", line);
 		free(line);
 		line = get_line(0);
 	}
+	free(line);
 	return (1);
 }

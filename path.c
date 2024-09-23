@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 11:53:36 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 15:01:23 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	make_exec(char *arg, char *envp[])
 	execve(commpath, command, envp);
 	free(commpath);
 	free_char_array(command, 1);
-	return (1);
+	return (rperror("execve"));
 }
 
 int	pipex(char *arg, char **envp)
@@ -110,7 +110,7 @@ int	pipex(char *arg, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-int	exec_to_outf(char *arg, char **envp, int outfile)
+int	exec_to_stdout(char *arg, char **envp)
 {
 	pid_t	cpid;
 
@@ -119,15 +119,11 @@ int	exec_to_outf(char *arg, char **envp, int outfile)
 		return (rperror("fork"));
 	else if (cpid == 0)
 	{
-		if (dup2(outfile, STDOUT_FILENO) == -1)
-			return (rperror("dup2"));
-		close(outfile);
 		make_exec(arg, envp);
 		perror("execve");
 		exit (EXIT_FAILURE);
 	}
 	else
 		waitpid(cpid, NULL, 0);
-	close(outfile);
 	return (EXIT_SUCCESS);
 }
