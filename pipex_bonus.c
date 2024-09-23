@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 17:33:58 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:01:45 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	main(int argc, char *argv[], char *envp[])
 		pipex(argv[i++], envp);
 	open_doc(argv[argc - 1], fileindicator);
 	exec_to_stdout(argv[argc - 2], envp);
+	while (wait(NULL) > 0)
+		;
 	return (EXIT_SUCCESS);
 }
 

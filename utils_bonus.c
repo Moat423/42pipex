@@ -6,12 +6,13 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 20:14:14 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 17:17:13 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 18:14:51 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/pipex.h"
 
+// replace with get_next_line and make EOF work only when first word of newline
 char	*get_line(int fd)
 {
 	char	*str;
