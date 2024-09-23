@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 17:21:54 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 17:33:58 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	pipheredoc(char *arg)
 
 int	input_checker(int argc, char *arg)
 {
-	ft_fprintf(2, "arg: %s\n", arg);
 	if (argc <= 4)
 	{
 		ft_printf("pipex: parse error");
