@@ -6,13 +6,11 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/22 20:26:46 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:00:53 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/pipex.h"
-
-int	input_checker(int argc, char *arg);
+#include "include/pipex_bonus.h"
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -22,12 +20,10 @@ int	main(int argc, char *argv[], char *envp[])
 	int		fileindicator;
 
 	fileindicator = input_checker(argc, argv[1]);
-	if (fileindicator == 0)
-		return (EXIT_FAILURE);
-	if (fileindicator == 1)
-		infile = here_doc(argc, argv);
-	infile = open(argv[1], O_RDONLY, 0444);
 	i = 2;
+	if (fileindicator == 1)
+		pipheredoc(argv[i++]);
+	infile = open(argv[1], O_RDONLY, 0444);
 	if (infile == -1)
 		return (rperror("open"));
 	if (dup2(infile, STDIN_FILENO) == -1)
@@ -38,33 +34,55 @@ int	main(int argc, char *argv[], char *envp[])
 	outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (outfile == -1)
 		return (rperror("open"));
-	if (exec_to_outf(argv[argc - 2], envp, outfile) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	close(outfile);
+	exec_to_outf(argv[argc - 2], envp, outfile);
 	while (wait(NULL) > 0)
 		;
 	return (EXIT_SUCCESS);
 }
 
-int	here_doc(argc, argv)
+int	pipheredoc(char *arg)
+{
+	pid_t	cpid;
+	int		pipefd[2];
 
-int input_checker(int argc, char *arg)
+	if (pipe(pipefd) == -1)
+		return (rperror("pipe"));
+	cpid = fork();
+	if (cpid == -1)
+		return (rperror("fork"));
+	else if (cpid == 0)
+	{
+		close(pipefd[0]);
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			return (rperror("dup2"));
+		close(pipefd[1]);
+		here_doc(arg);
+		exit (rperror("execve"));
+	}
+	close(pipefd[1]);
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		return (rperror("dup2"));
+	close(pipefd[0]);
+	waitpid(cpid, NULL, 0);
+	return (EXIT_SUCCESS);
+}
+
+int	input_checker(int argc, char *arg)
 {
 	if (argc <= 4)
 	{
 		ft_printf("pipex: parse error");
-		return (0);
+		exit (0);
 	}
 	else if (ft_strncmp(arg, "here_doc", 8 == 0))
 	{
 		if (argc < 6)
 		{
 			ft_printf("pipex: parse error");
-			return (0);
+			exit (0);
 		}
 		else
 			return (2);
 	}
 	return (1);
 }
-
