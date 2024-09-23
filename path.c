@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/21 19:08:54 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 11:53:36 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,53 @@ int	make_exec(char *arg, char *envp[])
 	free(commpath);
 	free_char_array(command, 1);
 	return (1);
+}
+
+int	pipex(char *arg, char **envp)
+{
+	pid_t	cpid;
+	int		pipefd[2];
+
+	if (pipe(pipefd) == -1)
+		return (rperror("pipe"));
+	cpid = fork();
+	if (cpid == -1)
+		return (rperror("fork"));
+	else if (cpid == 0)
+	{
+		close(pipefd[0]);
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			return (rperror("dup2"));
+		close(pipefd[1]);
+		make_exec(arg, envp);
+		exit (rperror("execve"));
+	}
+	close(pipefd[1]);
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		return (rperror("dup2"));
+	close(pipefd[0]);
+	waitpid(cpid, NULL, 0);
+	return (EXIT_SUCCESS);
+}
+
+int	exec_to_outf(char *arg, char **envp, int outfile)
+{
+	pid_t	cpid;
+
+	cpid = fork();
+	if (cpid == -1)
+		return (rperror("fork"));
+	else if (cpid == 0)
+	{
+		if (dup2(outfile, STDOUT_FILENO) == -1)
+			return (rperror("dup2"));
+		close(outfile);
+		make_exec(arg, envp);
+		perror("execve");
+		exit (EXIT_FAILURE);
+	}
+	else
+		waitpid(cpid, NULL, 0);
+	close(outfile);
+	return (EXIT_SUCCESS);
 }

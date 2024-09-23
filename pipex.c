@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/21 19:08:27 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:00:02 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,59 +32,9 @@ int	main(int argc, char *argv[], char *envp[])
 	outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (outfile == -1)
 		return (rperror("open"));
-	if (exec_to_outf(argv[argc - 2], envp, outfile) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-	close(outfile);
+	exec_to_outf(argv[argc - 2], envp, outfile);
 	while (wait(NULL) > 0)
 		;
-	return (EXIT_SUCCESS);
-}
-
-int	pipex(char *arg, char **envp)
-{
-	pid_t	cpid;
-	int		pipefd[2];
-
-	if (pipe(pipefd) == -1)
-		return (rperror("pipe"));
-	cpid = fork();
-	if (cpid == -1)
-		return (rperror("fork"));
-	else if (cpid == 0)
-	{
-		close(pipefd[0]);
-		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-			return (rperror("dup2"));
-		close(pipefd[1]);
-		make_exec(arg, envp);
-		exit (rperror("execve"));
-	}
-	close(pipefd[1]);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-		return (rperror("dup2"));
-	close(pipefd[0]);
-	waitpid(cpid, NULL, 0);
-	return (EXIT_SUCCESS);
-}
-
-int	exec_to_outf(char *arg, char **envp, int outfile)
-{
-	pid_t	cpid;
-
-	cpid = fork();
-	if (cpid == -1)
-		return (rperror("fork"));
-	else if (cpid == 0)
-	{
-		if (dup2(outfile, STDOUT_FILENO) == -1)
-			return (rperror("dup2"));
-		close(outfile);
-		make_exec(arg, envp);
-		perror("execve");
-		exit (EXIT_FAILURE);
-	}
-	else
-		waitpid(cpid, NULL, 0);
 	return (EXIT_SUCCESS);
 }
 
