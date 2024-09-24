@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/24 16:04:21 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/24 17:39:15 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include "libft/lib_ft/libft.h"
 #include "libft/libft_full.h"
 
+//TODO: zero the pipe if the execution of one command fails
+//TODO: also look at all outputs
 char	*get_commpath(char **paths, const char *command)
 {
 	int		i;
