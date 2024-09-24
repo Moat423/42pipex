@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 12:39:15 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:05:03 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (dup2(infile, STDIN_FILENO) == -1)
 		return (rperror("dup2"));
 	close(infile);
-	while (i < argc - 2)
-		pipex(argv[i++], envp);
+	pipex(argc, argv, envp, i);
 	outfile = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (outfile == -1)
 		return (rperror("open"));

@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 11:45:09 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 12:55:27 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:07:21 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_commpath(char *envp[], const char *command);
 char	**get_paths(char *envp[]);
 int		make_exec(char *arg, char *envp[]);
 int		exec_to_stdout(char *arg, char **envp);
-int		pipex(char *arg, char **envp);
+int		pipex(int argc, char **argv, char **envp, int curr);
 
 //utils_bonus.c
 char	*get_line(int fd);

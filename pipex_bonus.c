@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/24 15:28:14 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:08:15 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int	main(int argc, char *argv[], char *envp[])
 		pipheredoc(argv[i++]);
 	else
 		open_doc(argv[1], 0);
-	while (i < argc - 2)
-		pipex(argv[i++], envp);
+	pipex(argc, argv, envp, i);
 	open_doc(argv[argc - 1], fileindicator);
 	exec_to_stdout(argv[argc - 2], envp);
 	while (wait(NULL) > 0)
