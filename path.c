@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 15:01:23 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/24 15:13:03 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,11 @@ char	*get_commpath(char **paths, const char *command)
 		if (!commpath)
 			return (NULL);
 		else if (access(commpath, X_OK) == 0)
-			break ;
+			return (commpath);
 		free(commpath);
-		commpath = NULL;
 	}
-	if (!commpath)
-		ft_fprintf(2, "pipex: command not found: %s", command);
-	i = 0;
-	return (commpath);
+	ft_fprintf(2, "%s: command not found\n", command);
+	return (NULL);
 }
 
 char	**get_paths(char *envp[])
@@ -64,6 +61,7 @@ int	make_exec(char *arg, char *envp[])
 	char	**paths;
 	char	*commpath;
 	char	**command;
+	int		err;
 
 	paths = get_paths(envp);
 	command = ft_split(arg, ' ');
@@ -76,11 +74,14 @@ int	make_exec(char *arg, char *envp[])
 	commpath = get_commpath(paths, command[0]);
 	free_char_array(paths, 1);
 	if (!commpath)
-		return (free_char_array(command, 1));
+		return (free_char_array(command, 127));
 	execve(commpath, command, envp);
+	err = errno;
+	ft_fprintf(2, "%s: %s\n", command[0], strerror(err));
 	free(commpath);
 	free_char_array(command, 1);
-	return (rperror("execve"));
+	errno = err;
+	return (err);
 }
 
 int	pipex(char *arg, char **envp)
@@ -100,7 +101,7 @@ int	pipex(char *arg, char **envp)
 			return (rperror("dup2"));
 		close(pipefd[1]);
 		make_exec(arg, envp);
-		exit (rperror("execve"));
+		exit (errno);
 	}
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
