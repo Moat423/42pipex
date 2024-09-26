@@ -6,7 +6,7 @@
 #    By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 15:55:27 by lmeubrin          #+#    #+#              #
-#    Updated: 2024/09/23 16:02:15 by lmeubrin         ###   ########.fr        #
+#    Updated: 2024/09/26 15:44:49 by lmeubrin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ INCLUDES := -L$(LIBFT_DIR)
 
 OBJ_DIR := obj
 
-SRCS := pipex.c path.c utils.c
-SRCS_BONUS := pipex_bonus.c utils.c path.c utils_bonus.c
+SRCS := pipex.c path.c utils.c command.c
+SRCS_BONUS := pipex_bonus.c utils.c path.c utils_bonus.c command.c
 
 HEADERS := include/pipex.h
 HEADERS_BONUS := include/pipex_bonus.h

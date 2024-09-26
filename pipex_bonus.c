@@ -6,11 +6,12 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/26 14:08:00 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:44:05 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/pipex_bonus.h"
+#include "include/pipex.h"
 #include <fcntl.h>
 
 int	main(int argc, char *argv[], char *envp[])
@@ -25,7 +26,8 @@ int	main(int argc, char *argv[], char *envp[])
 	else
 		open_doc(argv[1], 0);
 	open_doc(argv[argc - 1], fileindicator);
-	return (pipex(argc, argv, envp, i));
+	pipex(argc, argv, envp, i);
+	return (exec_to_stdout(argv[argc - 2], envp));
 }
 
 //opens file, dup2s over correct std fd, filekind 0:inf, 1:outf, 2:outf(append)

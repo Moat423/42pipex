@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/26 13:53:07 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 15:40:28 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (rperror("dup2"));
 	close(outfile);
 	status = pipex(argc, argv, envp, i);
-	return (status);
+	return (exec_to_stdout(argv[argc - 2], envp));
 }
 
 int	basic_argc_checking(int argc)
