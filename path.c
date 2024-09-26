@@ -6,14 +6,16 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/24 17:39:15 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 14:06:46 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 #include "include/pipex.h"
 #include "libft/lib_ft/libft.h"
@@ -82,37 +84,71 @@ int	make_exec(char *arg, char *envp[])
 	ft_fprintf(2, "%s: %s\n", command[0], strerror(err));
 	free(commpath);
 	free_char_array(command, 1);
-	errno = err;
 	return (err);
 }
 
-int	pipex(int argc, char **argv, char **envp, int curr)
+int	exec_command(char *command, char *envp[], int in_fd, int out_fd)
 {
 	pid_t	cpid;
-	int		pipefd[2];
 
-	if (pipe(pipefd) == -1)
-		return (rperror("pipe"));
 	cpid = fork();
 	if (cpid == -1)
 		return (rperror("fork"));
 	else if (cpid == 0)
 	{
-		close(pipefd[0]);
-		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-			return (rperror("dup2"));
-		close(pipefd[1]);
-		make_exec(argv[curr], envp);
+		if (in_fd != STDIN_FILENO)
+		{
+			if (dup2(in_fd, STDIN_FILENO) == -1)
+				return (rperror("dup2"));
+			close(in_fd);
+		}
+		if (out_fd != STDOUT_FILENO)
+		{
+			if (dup2(out_fd, STDOUT_FILENO) == -1)
+				return (rperror("dup2"));
+			close(out_fd);
+		}
+		make_exec(command, envp);
 		exit (errno);
 	}
-	close(pipefd[1]);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-		return (rperror("dup2"));
-	close(pipefd[0]);
+	return (cpid);
+}
+
+int	pipex(int argc, char **argv, char **envp, int curr)
+{
+	int		pipefd[2];
+	int		prev_pipe;
+	pid_t	last_pid;
+	int		status;
+	pid_t	cpid;
+
+	prev_pipe = STDIN_FILENO;
+	last_pid = -1;
 	while (curr < argc - 2)
-		pipex(argc, argv, envp, ++curr);
-	waitpid(cpid, NULL, 0);
-	return (EXIT_SUCCESS);
+	{
+		if (pipe(pipefd) == -1)
+			return (rperror("pipe"));
+		cpid = exec_command(argv[curr], envp, prev_pipe, pipefd[1]);
+		if (cpid == -1)
+			return (rperror("fork"));
+		close(pipefd[1]);
+		if (prev_pipe != STDIN_FILENO)
+			close(prev_pipe);
+		prev_pipe = pipefd[0];
+		if (curr == argc - 3)
+			last_pid = cpid;
+		curr++;
+	}
+	last_pid = exec_command(argv[argc - 2], envp, prev_pipe, STDOUT_FILENO);
+	if (last_pid == -1)
+		return (rperror("fork"));
+	if (prev_pipe != STDIN_FILENO)
+		close(prev_pipe);
+	waitpid(last_pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else
+		return (-1);
 }
 
 int	exec_to_stdout(char *arg, char **envp)

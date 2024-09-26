@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:51:34 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/23 17:30:39 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 12:20:12 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ int	free_char_array(char **array, int ret)
 int	rperror(char *str)
 {
 	perror(str);
-	return (EXIT_FAILURE);
+	return (errno);
 }
