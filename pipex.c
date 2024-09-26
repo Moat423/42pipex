@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:39:02 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/26 15:40:28 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:32:26 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ int	main(int argc, char *argv[], char *envp[])
 int	basic_argc_checking(int argc)
 {
 	if (argc <= 4)
-		ft_printf("pipex: parse error");
+		ft_printf("pipex: parse error\n");
 	if (argc > 5)
-		ft_printf("pipex: ecxess argument(s)");
+		ft_printf("pipex: ecxess argument(s)\n");
 	if (argc <= 4 || argc > 5)
 		return (1);
 	return (0);

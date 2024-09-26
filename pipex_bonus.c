@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/21 19:22:19 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/26 15:44:05 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:32:40 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,14 +88,14 @@ int	input_checker(int argc, char *arg)
 {
 	if (argc <= 4)
 	{
-		ft_fprintf(2, "pipex: parse error");
+		ft_fprintf(2, "pipex: parse error\n");
 		exit (0);
 	}
 	else if (ft_strncmp("here_doc", arg, 8) == 0)
 	{
 		if (argc < 6)
 		{
-			ft_fprintf(2, "pipex: parse error");
+			ft_fprintf(2, "pipex: parse error\n");
 			exit (0);
 		}
 		else
