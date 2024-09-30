@@ -6,7 +6,7 @@
 #    By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/22 15:55:27 by lmeubrin          #+#    #+#              #
-#    Updated: 2024/09/26 15:44:49 by lmeubrin         ###   ########.fr        #
+#    Updated: 2024/09/30 15:16:59 by lmeubrin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,15 +65,6 @@ $(OBJ_DIR)/%.o: %.c $(HEADERS) | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 submodules:
-	@mkdir -p libft
-	@if [ ! -d "$(LIBFT_DIR)" ] || [ -z "$$(ls -A $(LIBFT_DIR))" ]; then \
-		echo "Initializing libft and its submodules..."; \
-		git submodule add -q -f git@github.com:Moat423/Libft_full.git $(LIBFT_DIR); \
-		git submodule update --init --recursive -- $(LIBFT_DIR); \
-	else \
-		echo "Updating libft and its submodules..."; \
-		git submodule update --init --recursive -- $(LIBFT_DIR); \
-	fi
 	@make -s -C $(LIBFT_DIR) > /dev/null 2>&1
 
 $(LIBFT_A):

@@ -2,4 +2,5 @@
 pipex
 a.out
 pipex_bonus
-
+*.o
+*.pdf
