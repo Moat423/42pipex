@@ -6,7 +6,7 @@
 /*   By: lmeubrin <lmeubrin@student.42berlin.       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 15:56:59 by lmeubrin          #+#    #+#             */
-/*   Updated: 2024/09/26 15:43:19 by lmeubrin         ###   ########.fr       */
+/*   Updated: 2024/09/30 15:01:34 by lmeubrin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**get_paths(char *envp[])
 	i = 0;
 	while (envp[i])
 	{
-		if (!strncmp("PATH=", envp[i], 5))
+		if (!ft_strncmp("PATH=", envp[i], 5))
 		{
 			paths = ft_split(envp[i] + 5, ':');
 			return (paths);
